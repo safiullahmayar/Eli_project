@@ -38,7 +38,25 @@
                     </ul>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#emails" role="button" aria-expanded="false"
+                    aria-controls="emails">
+                    <i class="link-icon" data-feather="mail"></i>
+                    <span class="link-title">TAsks</span>
+                    <i class="link-arrow" data-feather="chevron-down"></i>
+                </a>
+                <div class="collapse" id="emails">
+                    <ul class="nav sub-menu">
+                        <li class="nav-item">
+                            <a href="{{ route('task.index') }}" class="nav-link">All Tasks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('task.create') }}" class="nav-link">Add New Tasks</a>
+                        </li>
 
+                    </ul>
+                </div>
+            </li>
         </ul>
     </div>
 </nav>

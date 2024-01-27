@@ -46,7 +46,13 @@ class HomeController extends Controller
     }
     public function edit_user($id)
 {
+    // $role=Role::get();
+    try {
 $user=User::with('roles')->find($id);
+        return response()->json($user);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
 
 }
     public function delete_user($id)

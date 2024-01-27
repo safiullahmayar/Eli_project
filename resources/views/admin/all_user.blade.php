@@ -79,8 +79,10 @@
                                                         @endif
                                                     @endforeach
                                                     <td class="border-bottom"> <button type="button"
-                                                            class="btn btn-primary btn-sm"  data-bs-toggle="modal" onclick="edituser('{{ $user->id }}')"
-                                                            data-bs-target="#exampleModal" data-bs-whatever="@mdo">Edit</button>
+                                                            class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                                            onclick="edituser('{{ $user->id }}')"
+                                                            data-bs-target="#exampleModal"
+                                                            data-bs-whatever="@mdo">Edit</button>
                                                         <a href="#" onclick="deleteuser('{{ $user->id }}')"
                                                             class="btn btn-danger btn-sm">Delete</a>
                                                     </td>
@@ -113,10 +115,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="myform">
                         <div class="mb-3">
                             <label for="recipient-name" class="col-form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name"> 
+                            <input type="text" class="form-control" id="name" name="name">
                         </div>
                         <div class="mb-3">
                             <label for="email" class="col-form-label">Email</label>
@@ -125,7 +127,8 @@
                         <div class="mb-3">
                             <label for="email" class="col-form-label">Role</label>
                             <select name="role" id="role" class="form-control">
-                                <option value="">role</option>
+                                
+                                <option value=""></option>
                             </select>
                         </div>
                     </form>
@@ -186,12 +189,35 @@
                 }
             });
         }
-
-
-        function edituser(id) {
-
-        }
-
     </script>
-
+        <script type="text/javascript">
+            function edituser(id) { 
+                $.ajax({
+                    url: '{{ route('edit_user', ['id' => ':id']) }}'.replace(':id', id),
+                    type: 'get',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(user) {
+                        // Handle the data received from the server (e.g., update UI with task details)
+                        console.log(user);
+                        $('#name').val(user.name);
+                        $('#email').val(user.email);
+                        
+                        if (user.roles) {
+                            user.roles.forEach(function(role) {
+                                $('#role').append($('<option>', {
+                                    value: role.id,
+                                    text: role.name
+                                }));
+                            }); 
+                            $('#role').val(user.roles[0].id);
+                        }
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+            }
+        </script>
 @endsection
