@@ -26,7 +26,7 @@
                     <div class="col-lg-12 col-xl-12 stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <a href="" class="btn btn-primary btn-lg mb-2">Creare New Task</a>
+                                <a href="{{ route('task.create') }}" class="btn btn-primary btn-lg mb-2">Creare New Task</a>
 
                                 <div class="d-flex justify-content-between align-items-baseline mb-2">
                                     <h6 class="card-title mb-0">Tasks</h6>
@@ -51,7 +51,7 @@
                                         <tbody>
                                             @if ($tasks)
                                                 @foreach ($tasks as $task)
-                                                    <tr>
+                                                    <tr id="row{{ $task->id }}">
                                                         <td>{{ $loop->index + 1 }}</td>
                                                         <td>{{ $task->title }}</td>
                                                         <td>{{ $task->description }}</td>
@@ -65,8 +65,9 @@
                                                             </td>
                                                         @endif
                                                         <td>
-                                                            <a href="" class="btn btn-sm btn-warning">Edit</a>
-                                                            <a href="" class="btn btn-sm btn-danger">Delete</a>
+                                                            <a href="{{ route('task.edit',['id'=> $task->id]) }}" class="btn btn-sm btn-warning">Edit</a>
+                                                            <a href="#" onclick="Deletetask('{{ $task->id }}')"
+                                                                class="btn btn-sm btn-danger">Delete</a>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -89,4 +90,46 @@
 
         </div>
     </div>
+    <script>
+        function Deletetask(id) {
+            swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((data) => {
+                if (data.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('task.delete', ['id' => ':id']) }}".replace(':id', id),
+                        method: 'get',
+                        type: 'delete',
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            )
+                            $("#row" + id).remove();
+                        },
+                        error: function(error) {
+
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred while deleting the file.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
+    </script>
 @endsection

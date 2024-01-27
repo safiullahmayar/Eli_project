@@ -21,7 +21,8 @@ class TasksController extends Controller
      */
     public function create()
     {
-        //
+        return view('tasks.create');
+        
     }
 
     /**
@@ -29,7 +30,20 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+    $validate=$request->validate([
+        'title' =>'required',
+        'description' =>'required',
+     'status' =>'required',
+    ]);
+    if($validate)
+    {
+        Task::create($request->all());
+    return redirect()->route('task.index');
+    }
+    else{
+        return redirect()->back();
+    }
+    
     }
 
     /**
@@ -43,9 +57,11 @@ class TasksController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit( $id)
     {
-        //
+        $task=Task::find($id);
+      
+        return view('tasks.edit',compact('task'));
     }
 
     /**
@@ -59,8 +75,12 @@ class TasksController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy( $id)
     {
-        //
+        $task=Task::find($id);
+        $task->delete();
+        return response()->json(array('data' =>'Delete user'));
+
+
     }
 }
