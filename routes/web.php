@@ -47,6 +47,8 @@ route::post('task/store',[TasksController::class,'store' ])->name('task.store');
 route::get('task/edit{id}',[TasksController::class,'edit' ])->name('task.edit');
 route::post('task/update{id}',[TasksController::class,'update' ])->name('task.update');
 route::get('task/delete{id}',[TasksController::class,'destroy' ])->name('task.delete');
+route::get('task/show{id}',[TasksController::class,'show' ])->name('task.show');
+
 
 
 

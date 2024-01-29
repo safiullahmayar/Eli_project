@@ -12,8 +12,8 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $tasks=Task::get();
-        return view('tasks.index',compact('tasks'));
+        $tasks = Task::get();
+        return view('tasks.index', compact('tasks'));
     }
 
     /**
@@ -22,7 +22,6 @@ class TasksController extends Controller
     public function create()
     {
         return view('tasks.create');
-        
     }
 
     /**
@@ -30,20 +29,17 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-    $validate=$request->validate([
-        'title' =>'required',
-        'description' =>'required',
-     'status' =>'required',
-    ]);
-    if($validate)
-    {
-        Task::create($request->all());
-    return redirect()->route('task.index');
-    }
-    else{
-        return redirect()->back();
-    }
-    
+        $validate = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'status' => 'required',
+        ]);
+        if ($validate) {
+            Task::create($request->all());
+            return redirect()->route('task.index');
+        } else {
+            return redirect()->back();
+        }
     }
 
     /**
@@ -51,17 +47,20 @@ class TasksController extends Controller
      */
     public function show(string $id)
     {
-        //
+        
+        $task = Task::find($id);
+
+        return view('tasks.preview', compact('task'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit( $id)
+    public function edit($id)
     {
-        $task=Task::find($id);
-      
-        return view('tasks.edit',compact('task'));
+        $task = Task::find($id);
+
+        return view('tasks.edit', compact('task'));
     }
 
     /**
@@ -69,18 +68,30 @@ class TasksController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $task = Task::find($id);
+        $validate = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'status' => 'required',
+        ]);
+
+        if ($validate) {
+            $task->update($request->all());
+            // return response()->json(array('success' =>'how'));
+            return redirect()->route('task.index')->with('message','updated successfully');
+        } else{
+            return redirect()->back();
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy( $id)
+    public function destroy($id)
     {
-        $task=Task::find($id);
+        $task = Task::find($id);
         $task->delete();
-        return response()->json(array('data' =>'Delete user'));
-
-
+        return response()->json(array('data' => 'Delete user'));
     }
 }

@@ -24,9 +24,15 @@
 
                 <div class="row">
                     <div class="col-lg-12 col-xl-12 stretch-card">
+
                         <div class="card">
                             <div class="card-body">
                                 <a href="{{ route('task.create') }}" class="btn btn-primary btn-lg mb-2">Creare New Task</a>
+                                @if (Session::get('message'))
+                                    <div class=" alert alert-success">
+                                        {{ session::get('message') }},
+                                    </div>
+                                @endif
 
                                 <div class="d-flex justify-content-between align-items-baseline mb-2">
                                     <h6 class="card-title mb-0">Tasks</h6>
@@ -65,9 +71,12 @@
                                                             </td>
                                                         @endif
                                                         <td>
-                                                            <a href="{{ route('task.edit',['id'=> $task->id]) }}" class="btn btn-sm btn-warning">Edit</a>
+                                                            <a href="{{ route('task.edit', ['id' => $task->id]) }}"
+                                                                class="btn btn-sm btn-warning">Edit</a>
                                                             <a href="#" onclick="Deletetask('{{ $task->id }}')"
                                                                 class="btn btn-sm btn-danger">Delete</a>
+                                                            <a href="{{ route('task.show', ['id' => $task->id]) }}"
+                                                                class="btn btn-sm btn-danger">Preview</a>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -130,6 +139,5 @@
                 }
             });
         }
-
     </script>
 @endsection

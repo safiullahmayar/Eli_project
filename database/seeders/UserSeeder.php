@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +16,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         //
-        DB::table('users')->insert(
+    $data=
             [
                 [
                     'name' => 'admin',
@@ -31,7 +33,13 @@ class UserSeeder extends Seeder
                     'email' => 'manager@gmail.com',
                     'password' => bcrypt('manager'),
                 ],
-            ]
-        );
+            ];
+            foreach ($data as  $value) {
+            $user = User::create($value);
+            $role=Role::get();
+            // dd($user, $role);
+            $user->roles()->attach($role);
+            }
+      
     }
 }
