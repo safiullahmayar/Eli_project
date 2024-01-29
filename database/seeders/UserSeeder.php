@@ -34,12 +34,11 @@ class UserSeeder extends Seeder
                     'password' => bcrypt('manager'),
                 ],
             ];
-            foreach ($data as  $value) {
-            $user = User::create($value);
-            $role=Role::get();
-            // dd($user, $role);
-            $user->roles()->attach($role);
-            }
-      
-    }
+           
+      foreach ($data as $value)
+
+{
+    User::create($value);
+    
+}    }
 }
