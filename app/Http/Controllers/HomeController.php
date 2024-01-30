@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +13,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('admin.index');
+        $task=Task::get();
+        return view('admin.index', compact('task'));
     }
     public function create()
     {
