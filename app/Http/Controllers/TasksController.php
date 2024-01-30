@@ -7,20 +7,27 @@ use Illuminate\Http\Request;
 
 class TasksController extends Controller
 {
+
     /**
      * Display a listing of the resource.
-     */
-    public function index()
+     */ public function __construct()
     {
+        $this->middleware('auth');
+    }
+
+
+    public function index(Request $request)
+    {
+
         $tasks = Task::get();
         return view('tasks.index', compact('tasks'));
     }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
+        
         return view('tasks.create');
     }
 
@@ -29,16 +36,19 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'status' => 'required',
-        ]);
-        if ($validate) {
-            Task::create($request->all());
-            return redirect()->route('task.index');
-        } else {
-            return redirect()->back();
+        // if ($request->user()->can('create-tasks')) {
+        // if ($request->user()->can('create-task')) {
+            $validate = $request->validate([
+                'title' => 'required',
+                'description' => 'required',
+                'status' => 'required',
+            ]);
+            if ($validate) {
+                Task::create($request->all());
+                return redirect()->route('task.index');
+            } else {
+                return redirect()->back();
+            // }
         }
     }
 
@@ -47,7 +57,7 @@ class TasksController extends Controller
      */
     public function show(string $id)
     {
-        
+
         $task = Task::find($id);
 
         return view('tasks.preview', compact('task'));
@@ -78,8 +88,8 @@ class TasksController extends Controller
         if ($validate) {
             $task->update($request->all());
             // return response()->json(array('success' =>'how'));
-            return redirect()->route('task.index')->with('message','updated successfully');
-        } else{
+            return redirect()->route('task.index')->with('message', 'updated successfully');
+        } else {
             return redirect()->back();
         }
     }

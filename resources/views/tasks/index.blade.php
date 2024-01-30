@@ -70,14 +70,23 @@
                                                                 <span class="badge bg-success">{{ $task->status }}</span>
                                                             </td>
                                                         @endif
+                                                        {{-- @if (auth()->check() &&
+    auth()->user()->hasRole('admin'))   --}}
+     {{-- @can('viewAny',$task) --}}
                                                         <td>
                                                             <a href="{{ route('task.edit', ['id' => $task->id]) }}"
                                                                 class="btn btn-sm btn-warning">Edit</a>
                                                             <a href="#" onclick="Deletetask('{{ $task->id }}')"
                                                                 class="btn btn-sm btn-danger">Delete</a>
+
                                                             <a href="{{ route('task.show', ['id' => $task->id]) }}"
                                                                 class="btn btn-sm btn-danger">Preview</a>
+                                                            {{-- @endcan --}}
+
+                                                            {{-- @endif --}}
+
                                                         </td>
+                                                        {{-- @endcan --}}
                                                     </tr>
                                                 @endforeach
                                             @else

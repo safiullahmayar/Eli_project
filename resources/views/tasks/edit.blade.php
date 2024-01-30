@@ -20,10 +20,37 @@
                                         {{-- <h5 class="text-muted fw-normal mb-4">Welcome back! Log in to your account.</h5> --}}
                                         <form class="editform" action="{{ route('task.update',['id'=>$task->id]) }}" method="post">
                                             @csrf
-                                            <input type="hidden" name="id" value="{{ $task->id }}">
+                                            {{-- <input type="hidden" name="id" value="{{ $task->id }}"> --}}
 
                                             {{-- @dd($task)  --}}
-                                            @include('tasks.form_fields', ['task' => $task])
+                                            <div class="mb-3">
+                                                <label for="login" class="form-label">Title<span class="text-danger">*</span></label>
+                                                <input type="text"  class="form-control" id="title" name="title" placeholder="Enter Title"  value="{{ $task ? $task->title : '' }}">
+                                                @error('title')
+                                                <span class="text-danger">{{ $message }}</span>
+                                              @enderror
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="description" class="form-label">Description<span class="text-danger">*</span></label>
+                                                <textarea name="description" id="description" class="form-control">{{  $task ? $task->description : '' }}</textarea>
+                                                @error('description')
+                                                  <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                              <label for="status">Status <span class="text-danger">*</span></label>
+                                              <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="status" id="status" value="inprogress" {{ ($task->status == "inprogress")  ? 'checked' : ''  }}>
+                                                <label class="form-check-label" for="status">
+                                            Inprogress    </label>
+                                              </div>
+                                              <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="status" id="status"  value="completed"{{ ($task->status == "completed" ) ? 'checked' : ''  }}>
+                                                <label class="form-check-label" for="status">
+                                                  completed    </label>
+                                              </div>
+                                            </div>
+                                            
+                                            
                                             <div class="w-100 mb-3 mt-0">
                                                 <button type="submit"
                                                     class="btn btn-primary  btb-lg mb-2 mb-md-0 text-white"
