@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\IndoxController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TasksController;
 use Illuminate\Support\Facades\Route;
@@ -47,14 +48,15 @@ Route::middleware(['auth'])->group(function () {
     route::get('task/edit{id}', [TasksController::class, 'edit'])->middleware('can:update,App\Models\Task')->name('task.edit');
     route::post('task/update{id}', [TasksController::class, 'update'])->middleware('can:update,App\Models\Task')->name('task.update');
     route::get('task/delete{id}', [TasksController::class, 'destroy'])->middleware('can:viewAny,App\Models\Task')->name('task.delete');
-    route::get('task/show{id}', [TasksController::class, 'show'])->name('task.show');
+    route::get('task/show{id}', [TasksController::class, 'show'])->middleware('can:adminuser,App\Models\Task')->name('task.show');
+    route::get('task/notify', [TasksController::class, 'notify'])->name('notify');
+
+    
+
 });
-Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('user/index', [TasksController::class, 'index'])->name('user.task.index');
-    // Route::get('user/task/create', [TasksController::class, 'create'])->name('user.task.create');
-    // Route::post('user/task/store', [TasksController::class, 'store'])->name('user.task.store');
-    // Route::get('user/task/edit/{id}', [TasksController::class, 'edit'])->name('user.task.edit');
-    // Route::post('user/task/update/{id}', [TasksController::class, 'update'])->name('user.task.update');
-    // Route::get('user/task/delete/{id}', [TasksController::class, 'destroy'])->name('user.task.delete');
-    Route::get('user/task/show/{id}', [TasksController::class, 'show'])->middleware('can:useradmin, App\Models\Task')->name('user.task.show');
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('user/index', [IndoxController::class, 'index'])->name('inbox');
+    route::get('task/markNotificationAsRead/{id}', [IndoxController::class, 'markNotificationAsRead'])->name('markNotificationAsRead');
+    route::get('task/clearAllNotifications', [IndoxController::class, 'clearAllNotifications'])->name('clearAllNotifications');
+    
 });

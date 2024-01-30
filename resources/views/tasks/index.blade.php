@@ -9,7 +9,7 @@
         <div class="page-wrapper">
 
             <!-- partial:partials/_navbar.html -->
-            @include('admin.layouts.header')
+            @include('admin.layouts.header',['notifications'=>$notifications])
             <!-- partial -->
 
             <div class="page-content">

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
+use App\Notifications\TaskNotification;
 use Illuminate\Http\Request;
 
 class TasksController extends Controller
@@ -18,16 +20,16 @@ class TasksController extends Controller
 
     public function index(Request $request)
     {
-
+$notifications=Auth()->user()->unreadNotifications;
         $tasks = Task::get();
-        return view('tasks.index', compact('tasks'));
+        return view('tasks.index', compact('tasks','notifications'));
     }
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        
+
         return view('tasks.create');
     }
 
@@ -38,16 +40,16 @@ class TasksController extends Controller
     {
         // if ($request->user()->can('create-tasks')) {
         // if ($request->user()->can('create-task')) {
-            $validate = $request->validate([
-                'title' => 'required',
-                'description' => 'required',
-                'status' => 'required',
-            ]);
-            if ($validate) {
-                Task::create($request->all());
-                return redirect()->route('task.index');
-            } else {
-                return redirect()->back();
+        $validate = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'status' => 'required',
+        ]);
+        if ($validate) {
+            Task::create($request->all());
+            return redirect()->route('task.index');
+        } else {
+            return redirect()->back();
             // }
         }
     }
@@ -88,7 +90,11 @@ class TasksController extends Controller
         if ($validate) {
             $task->update($request->all());
             // return response()->json(array('success' =>'how'));
-            return redirect()->route('task.index')->with('message', 'updated successfully');
+            $user = $task->user; // Assuming there is a 'user' relationship on the Task model
+            if ($user) {
+                $user->notify(new TaskNotification($user));
+            }
+            return redirect()->route('notify')->with('message', 'updated successfully');
         } else {
             return redirect()->back();
         }
@@ -103,5 +109,12 @@ class TasksController extends Controller
         $task = Task::find($id);
         $task->delete();
         return response()->json(array('data' => 'Delete user'));
+    }
+    public function notify()
+
+    {
+        $user = User::first();
+        auth()->user()->notify(new TaskNotification($user));
+        return redirect()->route('task.index')->with('message', 'updated successfully');
     }
 }
