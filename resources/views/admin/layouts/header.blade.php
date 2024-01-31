@@ -140,13 +140,14 @@
                 </div>
             </li>
             <li class="nav-item dropdown">
-                
+
                 <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
                     <i data-feather="bell"></i>
                     <div class="indicator">
-                        <span class="badge bg-primary badge-number  position-absolute" style="font-size: 8px;
+                        <span class="badge bg-primary badge-number  position-absolute"
+                            style="font-size: 8px;
                         /* margin-right: 20px; */
                         margin-left: -6px;
                         top: -2px;">{{ Auth()->user()->unreadNotifications->count() }}</span>
@@ -160,20 +161,22 @@
                         <a href="{{ route('clearAllNotifications') }}" class="text-muted">Clear all</a>
                     </div>
                     <div class="p-1">
-                        <a href="javascript:;" class="dropdown-item d-flex align-items-center py-2">
 
-                            <div class="flex-grow-1 me-2">
-                                @foreach (Auth()->user()->unreadNotifications as $notification)
+
+                        <div class="flex-grow-1 me-2">
+                            @foreach (Auth()->user()->unreadNotifications as $notification)
+                                <a href="javascript:;" class="dropdown-item  align-items-center py-2">
                                     <p>{{ $notification->data['name'] }}</p>
                                     <p>{{ $notification->data['email'] }}</p>
 
                                     <p class="tx-12 text-muted">
                                         {{ $notification->updated_at->format('m/d/Y') }}
                                     </p>
-                                @endforeach
+                                </a>
+                            @endforeach
 
-                            </div>
-                        </a>
+                        </div>
+
 
                     </div>
                     <div class="px-3 py-2 d-flex align-items-center justify-content-center border-top">
