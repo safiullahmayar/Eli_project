@@ -18,6 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-// Route::get('/login', [UserController::class, 'login'])->name('login');
-// Route::get('/register', [UserController::class, 'register'])->name('admin/register');
+Route::get('/login', [UserController::class, 'login'])->name('login');
+Route::get('/register', [UserController::class, 'register'])->name('admin/register');
 
