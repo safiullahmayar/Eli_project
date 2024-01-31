@@ -32,6 +32,7 @@ Route::get('/', function () {
 // });
 
 require __DIR__ . '/auth.php';
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/create', [HomeController::class, 'create'])->name('create');
@@ -48,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     route::get('task/edit{id}', [TasksController::class, 'edit'])->middleware('can:update,App\Models\Task')->name('task.edit');
     route::post('task/update{id}', [TasksController::class, 'update'])->middleware('can:update,App\Models\Task')->name('task.update');
     route::get('task/delete{id}', [TasksController::class, 'destroy'])->middleware('can:viewAny,App\Models\Task')->name('task.delete');
-    route::get('task/show{id}', [TasksController::class, 'show'])->middleware('can:adminuser,App\Models\Task')->name('task.show');
+    route::get('task/show{id}', [TasksController::class, 'show'])->middleware('can:useradmin,App\Models\Task')->name('task.show');
     route::get('task/notify', [TasksController::class, 'notify'])->name('notify');
 
     

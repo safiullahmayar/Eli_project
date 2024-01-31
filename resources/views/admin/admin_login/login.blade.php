@@ -9,22 +9,18 @@
                     <div class="col-md-8 col-xl-6 mx-auto">
                         <div class="card">
                             <div class="row">
-                                <div class="col-md-4 pe-md-0">
-                                    <div class="auth-side-wrapper image-login" style="background-image: url({{ asset('upload/login.png') }})">
-
-                                    </div>
+                                <div class="col-md-2 pe-md-0">
+                                    
                                 </div>
                                 <div class="col-md-8 ps-md-0">
                                     <div class="auth-form-wrapper px-4 py-5">
-                                        <a href="#"
-                                            class="noble-ui-logo logo-light d-block mb-2">Safi Ullah<span> Development</span></a>
                                         <h5 class="text-muted fw-normal mb-4">Welcome back! Log in to your account.</h5>
                                         <form class="forms-sample" method="post" action="{{ route('login') }}">
                                             @csrf
                                             <div class="mb-3">
-                                                <label for="login" class="form-label">Email address /Name</label>
-                                                <input type="text" class="form-control" id="login" name="login"
-                                                    placeholder="Email/Name">
+                                                <label for="login" class="form-label">Email address</label>
+                                                <input type="email" class="form-control" id="login" name="login"
+                                                    placeholder="Email">
                                             </div>
                                             <div class="mb-3">
                                                 <label for="Password" class="form-label">Password</label>

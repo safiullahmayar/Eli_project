@@ -13,7 +13,7 @@ class TaskPolice
      */
     public function viewAny(User $user)
     {
-        return $user->email==='admin@gmail.com';
+        return $user->email === 'admin@gmail.com';
     }
 
     /**
@@ -29,8 +29,7 @@ class TaskPolice
      */
     public function isManager(User $user)
     {
-        return $user->email==='manager@gmail.com';
-        
+        return $user->email === 'manager@gmail.com';
     }
 
     /**
@@ -40,14 +39,14 @@ class TaskPolice
     {
         // return $user->viewAny() || $user->isManager();  
         return $this->isManager($user) || $this->viewAny($user);
-      }
+    }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function user(User $user)
+    public function Users(User $user)
     {
-        return $user->email==='user@gmail.com';
+        return $user->email === 'user@gmail.com';
     }
 
     /**
@@ -55,7 +54,7 @@ class TaskPolice
      */
     public function useradmin(User $user)
     {
-        return $this->user($user) || $this->viewAny($user);
+        return $this->Users($user) || $this->viewAny($user);
     }
 
     /**
