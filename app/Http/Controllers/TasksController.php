@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Notifications\TaskNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TasksController extends Controller
 {
@@ -20,9 +21,9 @@ class TasksController extends Controller
 
     public function index(Request $request)
     {
-$notifications=Auth()->user()->unreadNotifications;
+        $notifications = Auth()->user()->unreadNotifications;
         $tasks = Task::get();
-        return view('tasks.index', compact('tasks','notifications'));
+        return view('tasks.index', compact('tasks', 'notifications'));
     }
     /**
      * Show the form for creating a new resource.
@@ -116,5 +117,76 @@ $notifications=Auth()->user()->unreadNotifications;
         $user = User::first();
         auth()->user()->notify(new TaskNotification($user));
         return redirect()->route('task.index')->with('message', 'updated successfully');
+    }
+
+
+    // apis method 
+    public function create_api(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'title' => 'required',
+            'description' => 'required',
+            'status' => 'required',
+        ]);
+        if ($validate->fails()) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Something wrong',
+                'data' => $validate->errors()
+            ], 401);
+        }
+        $task = Task::create($request->all());
+        return response()->json([
+            'data' => $task,
+            'status' => 'success'
+        ]);
+    }
+    public function update_api(Request $request, string $id)
+    {
+        $validate = Validator::make($request->all(), [
+            'title' => 'required',
+            'description' => 'required',
+            'status' => 'required',
+        ]);
+        if ($validate->fails()) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Something wrong',
+                'data' => $validate->errors()
+            ], 401);
+        }
+        $task = Task::find($id);
+        if (is_null($task)) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'task do not found ',
+                'data' => $validate->errors()
+            ], 401);
+        }
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->status = $request->status;
+        $task->save();
+
+        return response()->json([
+            'data' => $task,
+            'status' => 'updated successfully',
+        ]);
+    }
+    public function delete_api(string $id)
+    {
+        $task = Task::find($id);
+        if (is_null($task)) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'task do not found ',
+                
+            ], 401);
+        }
+        $task->delete();
+        return response()->json([
+            'data' => $task,
+            'status' => 'deleted successfully',
+        ]);
     }
 }
