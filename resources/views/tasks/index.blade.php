@@ -9,7 +9,7 @@
         <div class="page-wrapper">
 
             <!-- partial:partials/_navbar.html -->
-            @include('admin.layouts.header',['notifications'=>$notifications])
+            @include('admin.layouts.header', ['notifications' => $notifications])
             <!-- partial -->
 
             <div class="page-content">
@@ -57,10 +57,11 @@
                                         <tbody>
                                             @if ($tasks)
                                                 @foreach ($tasks as $task)
-                                                    <tr id="row{{ $task->id }}">
+                                                    <tr>
                                                         <td>{{ $loop->index + 1 }}</td>
                                                         <td>{{ $task->title }}</td>
-                                                        <td>{{ $task->description }}</td>
+                                                        <td>{{ Str::limit($task->description, 50, '...') }}</td>
+
                                                         @if ($task->status == 'inprogress')
                                                             <td>
                                                                 <span class="badge bg-danger">{{ $task->status }}</span>
@@ -70,9 +71,8 @@
                                                                 <span class="badge bg-success">{{ $task->status }}</span>
                                                             </td>
                                                         @endif
-                                                        {{-- @if (auth()->check() &&
-    auth()->user()->hasRole('admin'))   --}}
-     {{-- @can('viewAny',$task) --}}
+                                                        {{-- @if (auth()->check() && auth()->user()->hasRole('admin'))   --}}
+                                                        {{-- @can('viewAny', $task) --}}
                                                         <td>
                                                             <a href="{{ route('task.edit', ['id' => $task->id]) }}"
                                                                 class="btn btn-sm btn-warning">Edit</a>
@@ -81,6 +81,7 @@
 
                                                             <a href="{{ route('task.show', ['id' => $task->id]) }}"
                                                                 class="btn btn-sm btn-danger">Preview</a>
+
                                                             {{-- @endcan --}}
 
                                                             {{-- @endif --}}

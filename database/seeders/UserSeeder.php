@@ -23,16 +23,16 @@ class UserSeeder extends Seeder
                     'email' => 'admin@gmail.com',
                     'password' => bcrypt('admin'),
                 ],
-                [
-                    'name' => 'user',
-                    'email' => 'user@gmail.com',
-                    'password' => bcrypt('user'),
-                ],
-                [
-                    'name' => 'manager',
-                    'email' => 'manager@gmail.com',
-                    'password' => bcrypt('manager'),
-                ],
+                // [
+                //     'name' => 'user',
+                //     'email' => 'user@gmail.com',
+                //     'password' => bcrypt('user'),
+                // ],
+                // [
+                //     'name' => 'manager',
+                //     'email' => 'manager@gmail.com',
+                //     'password' => bcrypt('manager'),
+                // ],
             ];
            
       foreach ($data as $value)

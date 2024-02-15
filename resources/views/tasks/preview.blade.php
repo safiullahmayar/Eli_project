@@ -15,10 +15,28 @@
                                 </div>
                                 <div class="col-md-8 ps-md-0">
                                     <div class="auth-form-wrapper px-4 py-5">
-                                        <a href="#" class="noble-ui-logo logo-light d-block mb-2">Preview<span>
-                                                of Task </span></a>
+
+                                        <h4 class="text-center mb-3"> Title : {{ $task->title }}</h4>
+                                        <h6 class="text-center text-success mb-3">{{ $task->status }}</h6>
+                                        <p class="mb-4">{{ $task->description }}</p>
+                                        <h5 class="mb-3">Comments</h5>
+                                        <div id="comments">
+
+
+                                        </div>
+                                        <form action="{{ route('comment.store') }}" method="post" id="commentform">
+                                            @csrf
+                                            <div class="mb-3 d-flex">
+                                                <input type="text" class="form-control" name="comment" id="comment"
+                                                    required />
+                                                <button type="submit" class="btn btn-primary">Send</button>
+                                            </div>
+
+                                        </form>
+                                        {{-- <a href="#" class="noble-ui-logo logo-light d-block mb-2">Preview<span>
+                                                of Task </span></a> --}}
                                         {{-- <h5 class="text-muted fw-normal mb-4">Welcome back! Log in to your account.</h5> --}}
-                                        <form class="editform" action="{{ route('task.update', ['id' => $task->id]) }}"
+                                        {{-- <form class="editform" action="{{ route('task.update', ['id' => $task->id]) }}"
                                             method="post">
                                             @csrf
                                             <input type="hidden" name="id" value="{{ $task->id }}">
@@ -34,9 +52,9 @@
                                                 @error('description')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
-                                            </div>
-                                            {{-- @dd($task->status) --}}
-                                            <label for="status">Status </label>
+                                            </div> --}}
+                                        {{-- @dd($task->status) --}}
+                                        {{-- <label for="status">Status </label>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="status" id="status"
                                                     readonly
@@ -50,9 +68,12 @@
                                                     value="completed"{{ $task->status == 'completed' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="status">
                                                     completed </label>
-                                            </div>
+                                            </div> --}}
+
+                                        {{-- </form> --}}
+
+
                                     </div>
-                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -63,44 +84,58 @@
         </div>
     </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('.editform').on('submit', function(e) {
-                e.preventDefault();
-                var form = $(this);
-                var data = form.serialize();
+        function fetchComments() {
+            $.ajax({
+                url: "{{ route('getComments', $task->id) }}",
+                type: "GET",
+                dataType: "json",
+                success: function(response) {
+                    $('#comments').html(response.html);
+                    console.log(response);
+                },
+                error: function(xhr) {
+                    toastr.warning('Something wrong!');
+                }
+            });
+        }
 
-                // Make sure to have the ID available in your Blade view
-                var id = "{{ $task }}";
+        $(document).ready(function() {
+
+
+            $('#commentform').on('submit', function(e) {
+                e.preventDefault();
+                var task_id = "{{ $task->id }}";
+                var message = $('#comment').val();
 
                 $.ajax({
-                    url: "{{ route('task.update', ['id' => ':id']) }}".replace(':id', id),
-                    method: 'POST', // Corrected: 'post' to 'POST'
-                    data: data,
+                    url: "{{ route('comment.store') }}",
+                    method: 'POST',
+                    data: {
+                        task_id: task_id,
+                        comment: message,
+                    },
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        toastr.success('Comment Added');
+                        $('#comment').val('');
+                        fetchComments();
 
                         console.log(response);
-                        if (response.success) {
-                            updateTask(response.task)
-                            setTimeout(function() {
-                                window.location = "{{ route('task.index') }}";
-                            }, 1000);
-                        }
                     },
                     error: function(error) {
-                        console.log(error.responseText); // Log any errors for debugging
+                        toastr.warning('Something went wrong!');
+                        console.log(error
+                            .responseText
+                        );
                     }
                 });
             });
+            fetchComments();
 
-            function updateTask(task) {
-                $('#title').text(task.title);
-                $('#description').text(task.description);
-                $('#status').text(task.status);
-            }
         });
     </script>
 @endsection

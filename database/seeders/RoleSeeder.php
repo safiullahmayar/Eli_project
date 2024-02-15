@@ -31,10 +31,13 @@ class RoleSeeder extends Seeder
             ]
         ];
 
-        foreach ($data as  $value) {
-            $role = Role::create($value);
-            $user = User::get();
-            $role->users()->attach($user);
+        foreach ($data as $value) {
+            $role = Role::firstOrCreate(['slug' => $value['slug']], $value);
+            $user = User::find(1);
+
+            if (!$user->roles->contains('slug', 'admin')) {
+                $user->roles()->attach($role->id);
+            }
         }
     }
 }

@@ -19,9 +19,8 @@
                 </a>
             </li>
             {{-- {{-- @auth --}}
-                
-            @if (auth()->check() && auth()->user()->roles->pluck('slug')->contains('admin'))
 
+            @if (auth()->check() && auth()->user()->roles->pluck('slug')->contains('admin'))
                 <li class="nav-item nav-category text-capitalize">realstates</li>
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#emails" role="button" aria-expanded="false"
@@ -42,7 +41,7 @@
                         </ul>
                     </div>
                 </li>
-@endif
+            @endif
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#emails" role="button" aria-expanded="false"
                     aria-controls="emails">

@@ -101,7 +101,12 @@ class TasksController extends Controller
         }
     }
 
+public function details($id)
+{
+    $task = Task::find($id);
 
+    return view('tasks.details', compact('task'));
+}
     /**
      * Remove the specified resource from storage.
      */

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IndoxController;
 use App\Http\Controllers\ProfileController;
@@ -35,11 +36,11 @@ require __DIR__ . '/auth.php';
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard/create', [HomeController::class, 'create'])->name('create');
-    Route::post('/dashboard/store', [HomeController::class, 'store'])->name('store');
-    Route::get('/dashboard/Alluser', [HomeController::class, 'Alluser'])->name('Alluser');
-    Route::get('/dashboard/delete_user/{id}', [HomeController::class, 'delete_user'])->name('delete_user');
-    Route::get('/dashboard/edit_user/{id}', [HomeController::class, 'edit_user'])->name('edit_user');
+    Route::get('/dashboard/create', [HomeController::class, 'create'])->middleware('can:viewAny,App\Models\user')->name('create');
+    Route::post('/dashboard/store', [HomeController::class, 'store'])->middleware('can:viewAny,App\Models\user')->name('store');
+    Route::get('/dashboard/Alluser', [HomeController::class, 'Alluser'])->middleware('can:viewAny,App\Models\user')->name('Alluser');
+    Route::get('/dashboard/delete_user/{id}', [HomeController::class, 'delete_user'])->middleware('can:viewAny,App\Models\user')->name('delete_user');
+    Route::get('/dashboard/edit_user/{id}', [HomeController::class, 'edit_user'])->middleware('can:viewAny,App\Models\user')->name('edit_user');
     Route::get('/dashboard/logout', [HomeController::class, 'destroy'])->name('user_logout');
 });
 Route::middleware(['auth'])->group(function () {
@@ -51,13 +52,19 @@ Route::middleware(['auth'])->group(function () {
     route::get('task/delete{id}', [TasksController::class, 'destroy'])->middleware('can:viewAny,App\Models\Task')->name('task.delete');
     route::get('task/show{id}', [TasksController::class, 'show'])->middleware('can:useradmin,App\Models\Task')->name('task.show');
     route::get('task/notify', [TasksController::class, 'notify'])->name('notify');
+    // route::get('task/details/{id}', [TasksController::class, 'details'])->name('details');
 
-    
+
+
 
 });
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('user/index', [IndoxController::class, 'index'])->name('inbox');
     route::get('task/markNotificationAsRead/{id}', [IndoxController::class, 'markNotificationAsRead'])->name('markNotificationAsRead');
     route::get('task/clearAllNotifications', [IndoxController::class, 'clearAllNotifications'])->name('clearAllNotifications');
-    
+});
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::post('comment/store', [CommentController::class, 'store'])->name('comment.store');
+    Route::get('comment/get/{id}', [CommentController::class, 'getComments'])->name('getComments');
+
 });
